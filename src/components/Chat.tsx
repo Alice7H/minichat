@@ -1,13 +1,13 @@
 import { FormEvent, useEffect, useState } from 'react'
-import io from 'socket.io-client'
+import{ io, Socket } from 'socket.io-client'
 import { v4 as uuidv4 } from 'uuid'
 
 interface Message { id: string,  message: string }
 const myId = uuidv4()
-let socket: any
+let socket: Socket
 
 export function Chat() {
-  const item = "border rounded-full max-w-xs px-4 py-1 m-1 "
+  const item = "border rounded-full max-w-xs px-8 py-1 m-1 "
   const itemMine = "self-start border-blue-400 bg-blue-200 "
   const itemOther = "self-end border-green-400 bg-green-200 "
 
@@ -18,15 +18,15 @@ export function Chat() {
     socketInitializer()
 
     return () => {
-      socket.disconnect()
+      socket.on('disconnect', (reason) => { console.log(`disconnected due to ${reason}`) });
     }
   }, [])
 
   async function socketInitializer() {
-    await fetch('/api/socket')
+    await fetch('api/socket')
+    //socket = io(':3333', { transports: ['websocket']})
     socket = io()
-
-    socket.on('connect', () => { console.log('Socket connected') })
+    socket.on('connect', () => { console.log(socket.id) })
 
     socket.on("receive-message", (data: Message) => {
       setMessages((preview)=> [...preview, data])
@@ -37,7 +37,6 @@ export function Chat() {
     e.preventDefault()
     if(message.trim()) {
       socket.emit('send-message', {id: myId, message })
-      //setMessages([...messages, {id: myId, message }])
       setMessage('')
     }
   }

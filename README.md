@@ -1,5 +1,6 @@
 # Mini chat
 
+![Banner](./public/banner.png)
 Esta aplicação foi criada com [Next.js](https://nextjs.org/) e inicializado com o[`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
 ## Inicializando
